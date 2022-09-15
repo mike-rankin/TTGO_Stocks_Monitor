@@ -8,7 +8,13 @@ Please install first [PlatformIO](http://platformio.org/) open source ecosystem 
 
 ## Configure
 
-Set your Wifi crendentials and API key in the configuration file: platformio.ini.
+Set your Wifi crendentials and API key in the configuration file: platformio.ini or export your configuration via environment variables like this:
+
+``` bash
+export PIO_WIFI_SSID="your-wifi-ssid"
+export PIO_WIFI_PASSWORD="your-wifi-password"
+export FINHUB_API_KEY="your-api-key"
+```
 
 ## Firmware upload
 
