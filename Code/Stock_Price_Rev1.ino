@@ -13,8 +13,14 @@
 
 TFT_eSPI tft = TFT_eSPI(); 
 
+#ifdef PLATFORMIO
+const char* ssid     = WIFI_SSID;      
+const char* password = WIFI_PASS;
+#else
 const char* ssid     = "SSID";      
-const char* password = "PASSWORD";         
+const char* password = "PASSWORD";
+#endif
+
 
 //#define gray 0x39C7
 //#define dblue 0x01A9
@@ -28,28 +34,7 @@ double last=0;
 
 StaticJsonDocument<6000> doc;
 
-void setup() 
-{
-  Serial.begin(15200);
-  tft.init();
-  tft.setRotation(3);
-  tft.fillScreen(TFT_BLACK);
-  connect_to_wifi(); 
-}
 
-
-void loop() 
-{
- main_page();
- stock_page("AAPL","AMZN","TSLA","MSFT","LAC","SNAP","SPOT");
- //delay(10000);  //10 seconds delay
- //delay(30000);  //30 seconds delay
- //delay(60000);  //1 minute delay
- delay(300000);  //5 minute delay
-
- reset_screen();
-
-}
 
 
 void connect_to_wifi()
@@ -147,5 +132,26 @@ void read_price(int x_i,int y_i,String stock_name)
  }
 }
 
+void setup() 
+{
+  Serial.begin(15200);
+  tft.init();
+  tft.setRotation(3);
+  tft.fillScreen(TFT_BLACK);
+  connect_to_wifi(); 
+}
 
+
+void loop() 
+{
+ main_page();
+ stock_page("AAPL","AMZN","TSLA","MSFT","LAC","SNAP","SPOT");
+ //delay(10000);  //10 seconds delay
+ //delay(30000);  //30 seconds delay
+ //delay(60000);  //1 minute delay
+ delay(300000);  //5 minute delay
+
+ reset_screen();
+
+}
   
