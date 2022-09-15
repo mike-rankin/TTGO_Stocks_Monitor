@@ -6,15 +6,22 @@
 #include <WiFi.h>
 #include <TFT_eSPI.h> 
 #include <WiFiUdp.h>
-#include <TimeLib.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h> 
 #include "orb.h"
 
 TFT_eSPI tft = TFT_eSPI(); 
 
+#ifdef PLATFORMIO
+const char* ssid     = WIFI_SSID;  // Please configure in platformio.ini   
+const char* password = WIFI_PASS;
+const char* finhub_api = FINHUB_API;
+#else
 const char* ssid     = "SSID";      
-const char* password = "PASSWORD";         
+const char* password = "PASSWORD";
+const char* finhub_api = "YOUR API TOKEN FROM FINNHUB.IO";
+#endif
+
 
 //#define gray 0x39C7
 //#define dblue 0x01A9
@@ -28,28 +35,7 @@ double last=0;
 
 StaticJsonDocument<6000> doc;
 
-void setup() 
-{
-  Serial.begin(15200);
-  tft.init();
-  tft.setRotation(3);
-  tft.fillScreen(TFT_BLACK);
-  connect_to_wifi(); 
-}
 
-
-void loop() 
-{
- main_page();
- stock_page("AAPL","AMZN","TSLA","MSFT","LAC","SNAP","SPOT");
- //delay(10000);  //10 seconds delay
- //delay(30000);  //30 seconds delay
- //delay(60000);  //1 minute delay
- delay(300000);  //5 minute delay
-
- reset_screen();
-
-}
 
 
 void connect_to_wifi()
@@ -106,7 +92,7 @@ void read_price(int x_i,int y_i,String stock_name)
  float percentchange; 
  
  HTTPClient http; 
- http.begin("https://finnhub.io/api/v1/quote?symbol="+stock_name+"&token=YOUR API TOKEN FROM FINNHUB.IO"); 
+ http.begin("https://finnhub.io/api/v1/quote?symbol="+stock_name+"&token="+String(finhub_api)); 
     
  int httpCode = http.GET();  
  if (httpCode > 0)
@@ -147,5 +133,26 @@ void read_price(int x_i,int y_i,String stock_name)
  }
 }
 
+void setup() 
+{
+  Serial.begin(115200);
+  tft.init();
+  tft.setRotation(3);
+  tft.fillScreen(TFT_BLACK);
+  connect_to_wifi(); 
+}
 
+
+void loop() 
+{
+ main_page();
+ stock_page("AAPL","AMZN","TSLA","MSFT","LAC","SNAP","SPOT");
+ //delay(10000);  //10 seconds delay
+ //delay(30000);  //30 seconds delay
+ //delay(60000);  //1 minute delay
+ delay(300000);  //5 minute delay
+
+ reset_screen();
+
+}
   
