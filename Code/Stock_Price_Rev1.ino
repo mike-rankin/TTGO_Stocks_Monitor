@@ -6,7 +6,6 @@
 #include <WiFi.h>
 #include <TFT_eSPI.h> 
 #include <WiFiUdp.h>
-#include <TimeLib.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h> 
 #include "orb.h"
@@ -14,11 +13,13 @@
 TFT_eSPI tft = TFT_eSPI(); 
 
 #ifdef PLATFORMIO
-const char* ssid     = WIFI_SSID;      
+const char* ssid     = WIFI_SSID;  // Please configure in platformio.ini   
 const char* password = WIFI_PASS;
+const char* finhub_api = FINHUB_API;
 #else
 const char* ssid     = "SSID";      
 const char* password = "PASSWORD";
+const char* finhub_api = "YOUR API TOKEN FROM FINNHUB.IO";
 #endif
 
 
@@ -91,7 +92,7 @@ void read_price(int x_i,int y_i,String stock_name)
  float percentchange; 
  
  HTTPClient http; 
- http.begin("https://finnhub.io/api/v1/quote?symbol="+stock_name+"&token=YOUR API TOKEN FROM FINNHUB.IO"); 
+ http.begin("https://finnhub.io/api/v1/quote?symbol="+stock_name+"&token="+String(finhub_api)); 
     
  int httpCode = http.GET();  
  if (httpCode > 0)
@@ -134,7 +135,7 @@ void read_price(int x_i,int y_i,String stock_name)
 
 void setup() 
 {
-  Serial.begin(15200);
+  Serial.begin(115200);
   tft.init();
   tft.setRotation(3);
   tft.fillScreen(TFT_BLACK);
